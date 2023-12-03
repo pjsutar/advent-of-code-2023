@@ -1,0 +1,54 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cctype>
+#include <numeric>
+
+int main() {
+
+	std::string line;
+
+	const int redCount = 12;
+	const int greenCount = 13;
+	const int blueCount = 14;
+
+	int gameId = 0;
+	int gameIdSum = 0;
+
+	std::ifstream gameLog("game.txt");
+
+	if (gameLog.is_open()) {
+		while (std::getline(gameLog, line)) {
+			gameId += 1;
+			gameIdSum += gameId;
+			std::string gameInfo = line.substr(line.find(":"));
+
+			for (auto itr = gameInfo.begin(); itr != gameInfo.end(); itr++) {
+				if (std::isdigit(*itr)) {
+					int cubes = std::atoi(&(*itr));
+					itr++;
+					if (cubes > redCount && *(itr + 2) == 'r') {
+						gameIdSum -= gameId;
+						break;
+					}
+					if (cubes > greenCount && *(itr + 2) == 'g') {
+						gameIdSum -= gameId;
+						break;
+					}
+					if (cubes > blueCount && *(itr + 2) == 'b') {
+						gameIdSum -= gameId;
+						break;
+					}
+				}
+			}
+		}
+		std::cout << gameIdSum << std::endl;
+		return gameIdSum;
+	}
+	else {
+		std::cout << "Unable to open file." << std::endl;
+		return -1;
+	}
+	
+}
